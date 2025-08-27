@@ -1,0 +1,24 @@
+[submodule "ComfyUI"]
+	path = ComfyUI
+	url = https://github.com/comfyanonymous/ComfyUI.git
+[submodule "QwenImage-ComfyUI"]
+	path = QwenImage-ComfyUI
+	url = https://github.com/AIFSH/QwenImage-ComfyUI.git
+[submodule "ComfyUI-AnimateDiff-Evolved"]
+	path = ComfyUI-AnimateDiff-Evolved
+	url = https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved.git
+[submodule "ComfyUI-Manager"]
+	path = ComfyUI-Manager
+	url = https://github.com/ltdrdata/ComfyUI-Manager.git
+[submodule "comfyui_controlnet_aux"]
+	path = comfyui_controlnet_aux
+	url = https://github.com/Fannovel16/comfyui_controlnet_aux.git
+[submodule "ComfyUI_IPAdapter_plus"]
+	path = ComfyUI_IPAdapter_plus
+	url = https://github.com/cubiq/ComfyUI_IPAdapter_plus.git
+[submodule "ComfyUI_UltimateSDUpscale"]
+	path = ComfyUI_UltimateSDUpscale
+	url = https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git
+[submodule "was-node-suite-comfyui"]
+	path = was-node-suite-comfyui
+	url = https://github.com/WASasquatch/was-node-suite-comfyui.git
