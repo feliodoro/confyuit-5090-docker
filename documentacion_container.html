@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa del Entorno ComfyUI Docker v2</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background-color: #1e1e1e;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #4fc3f7;
+            border-bottom: 2px solid #4fc3f7;
+            padding-bottom: 10px;
+        }
+        .collapsible {
+            color: #4fc3f7;
+            border-bottom: 2px solid #4fc3f7;
+            padding-bottom: 10px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 1.75em;
+            font-weight: bold;
+            margin-top: 20px;
+            position: relative;
+        }
+        .collapsible:after {
+            content: '\25BC'; /* Flecha hacia abajo */
+            font-size: 0.8em;
+            color: #4fc3f7;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease-in-out;
+        }
+        .collapsible.active:after {
+            transform: translateY(-50%) rotate(180deg); /* Flecha hacia arriba */
+        }
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #2a2a2a;
+        }
+        h3 { 
+            border-bottom-style: dashed;
+            color: #29b6f6;
+            border-bottom-width: 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #444;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: #b3e5fc;
+        }
+        tr:nth-child(even) {
+            background-color: #303030;
+        }
+        code {
+            font-family: "Fira Code", "Courier New", monospace;
+            background-color: #1a1a1a;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        pre {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        a {
+            color: #81d4fa;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .warning {
+            background-color: #4d2c3d;
+            border-left: 5px solid #f06292;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        .info {
+            background-color: #1c3b47;
+            border-left: 5px solid #4dd0e1;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        .command-block {
+            position: relative;
+            margin-top: 10px;
+        }
+        .command-block pre {
+            padding-right: 100px; /* Espacio para el botón */
+        }
+        .copy-button {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            background-color: #4fc3f7;
+            color: #1e1e1e;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background-color: #81d4fa;
+        }
+        .copy-button.copied {
+            background-color: #4caf50; /* Verde para feedback */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guía del Entorno ComfyUI Docker v2</h1>
+
+        <button type="button" class="collapsible active">Flujo de Trabajo Recomendado</button>
+        <div class="content" style="max-height: fit-content;">
+            <p>Este proyecto ahora utiliza <strong>Submódulos de Git</strong> para gestionar las dependencias. Este es el método estándar y más robusto.</p>
+
+            <h3>A. Primera Instalación</h3>
+            <p>Si clonas este proyecto en una máquina nueva, usa este comando para obtener el proyecto y todos sus componentes de una sola vez:</p>
+            <div class="command-block">
+                <pre><code>git clone --recurse-submodules &lt;URL_DEL_REPOSITORIO_PRINCIPAL&gt;</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h3>B. Iniciar el Entorno</h3>
+            <p>Una vez tienes el proyecto, estos son los comandos para levantarlo.</p>
+            <div class="command-block">
+                <pre><code># 1. Ve al directorio del proyecto
+cd /ruta/a/comfyui-docker/
+
+# 2. Inicia el contenedor en segundo plano
+docker compose up -d</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>La interfaz estará disponible en <a href="http://localhost:8188" target="_blank">http://localhost:8188</a>.</p>
+
+            <h3>C. Actualizar Todos los Componentes (Submódulos)</h3>
+            <p>Para poner al día todos los nodos personalizados a su última versión:</p>
+            <div class="command-block">
+                <pre><code># 1. Actualiza el repositorio principal
+git pull
+
+# 2. Actualiza todos los submódulos (los componentes)
+git submodule update --remote --merge</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>Después de actualizar, puede que necesites reconstruir la imagen si los cambios son importantes o si los submódulos tienen nuevas dependencias:</p>
+            <div class="command-block">
+                <pre><code>docker compose down && docker build -t comfyui-station:final . && docker compose up -d</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h3>D. Detener el Entorno</h3>
+            <div class="command-block">
+                <pre><code>docker compose down</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+        </div>
+
+        <button type="button" class="collapsible">Conceptos Clave de Git y GitHub</button>
+        <div class="content">
+            <p>Para entender cómo funciona este proyecto, es fundamental conocer algunos conceptos básicos de Git y cómo interactúa con GitHub.</p>
+
+            <h3>¿Qué es Git?</h3>
+            <p>Git es un sistema de control de versiones distribuido. Esto significa que te permite llevar un registro de los cambios en tu código a lo largo del tiempo, colaborar con otros y volver a versiones anteriores si es necesario. Es como un historial detallado de todo lo que ocurre en tu proyecto.</p>
+
+            <h3>¿Qué son los Submódulos de Git?</h3>
+            <p>Los submódulos son una característica de Git que te permite incluir un repositorio de Git dentro de otro repositorio de Git como un subdirectorio. En este proyecto, usamos submódulos para gestionar los diferentes componentes de ComfyUI (como los nodos personalizados) de forma limpia y versionada. El repositorio principal (`comfyui-docker`) "apunta" a versiones específicas de esos otros repositorios.</p>
+
+            <h3>Instalación de Git</h3>
+            <p>Si no tienes Git instalado en tu sistema, puedes hacerlo con un comando similar a este (para sistemas basados en Debian/Ubuntu):</p>
+            <div class="command-block">
+                <pre><code>sudo apt update
+sudo apt install git</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h3>Configuración de tu Identidad en Git</h3>
+            <p>Antes de poder guardar cambios (hacer un "commit") en un repositorio Git, necesitas decirle a Git quién eres. Esto solo se hace una vez por máquina o por repositorio.</p>
+            <div class="command-block">
+                <pre><code>git config --global user.name "Tu Nombre"
+git config --global user.email "tu@correo.com"</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>Puedes omitir `--global` si solo quieres configurar tu identidad para este proyecto.</p>
+        </div>
+
+        <button type="button" class="collapsible">Sincronizar tu Proyecto con GitHub</button>
+        <div class="content">
+            <p>Una vez que has personalizado tu configuración (ajustando el <code>Dockerfile</code>, <code>docker-compose.yml</code>, o añadiendo nuevos submódulos), es una excelente práctica guardar tu trabajo en un repositorio de GitHub. Esto te permite tener una copia de seguridad, colaborar con otros y mantener un historial de cambios.</p>
+
+            <h3>Paso 1: Crear un Repositorio en GitHub</h3>
+            <p>Para empezar, necesitas un lugar en GitHub donde almacenar tu proyecto. Sigue estos pasos:</p>
+            <ol>
+                <li>Abre tu navegador y ve a <a href="https://github.com/" target="_blank">GitHub</a>. Inicia sesión en tu cuenta.</li>
+                <li>En la esquina superior derecha, haz clic en el signo <code>+</code> y selecciona <strong>"New repository"</strong> (Nuevo repositorio).</li>
+                <li>En la página "Create a new repository":
+                    <ul>
+                        <li><strong>Repository name:</strong> Introduce un nombre para tu repositorio, por ejemplo, <code>confyuit-5090-docker</code> (como en tu caso).</li>
+                        <li><strong>Description (optional):</strong> Añade una breve descripción.</li>
+                        <li><strong>Public o Private:</strong> Elige si quieres que tu repositorio sea público (visible para todos) o privado (solo visible para ti y quienes invites).</li>
+                        <li><strong>NO</strong> marques la opción "Add a README file", "Add .gitignore" o "Choose a license" si vas a subir un proyecto existente como este. Esto evitará conflictos iniciales.</li>
+                    </ul>
+                </li>
+                <li>Haz clic en el botón verde <strong>"Create repository"</strong>.</li>
+                <li>Una vez creado, GitHub te mostrará una página con instrucciones. Busca la URL de tu repositorio. Se verá así: <code>https://github.com/&lt;TU_USUARIO&gt;/&lt;NOMBRE_DEL_REPO&gt;.git</code>. Por ejemplo, para tu caso, sería <code>https://github.com/feliodoro/confyuit-5090-docker.git</code>. Copia esta URL, la necesitarás en el siguiente paso.</li>
+            </ol>
+
+            <h3>Paso 2: Autenticación con GitHub (Personal Access Token - PAT)</h3>
+            <div class="warning">
+                <p><strong>¡Importante!</strong> GitHub ha descontinuado el uso de contraseñas para operaciones de Git a través de HTTPS. Ahora debes usar un <strong>Personal Access Token (PAT)</strong>.</p>
+                <p>Si al intentar subir o clonar repositorios recibes errores de "Invalid username or token" o "Password authentication is not supported", necesitas configurar un PAT.</p>
+            </div>
+            <p>Un PAT es una alternativa segura a tu contraseña de GitHub para autenticarte cuando usas Git en la línea de comandos. Sigue estos pasos para generarlo:</p>
+            <ol>
+                <li>En GitHub, haz clic en tu foto de perfil (esquina superior derecha) y selecciona <strong>"Settings"</strong> (Configuración).</li>
+                <li>En la barra lateral izquierda, haz clic en <strong>"Developer settings"</strong> (Configuración de desarrollador).</li>
+                <li>En la barra lateral izquierda, haz clic en <strong>"Personal access tokens"</strong> (Tokens de acceso personal) y luego selecciona <strong>"Tokens (classic)"</strong>.</li>
+                <li>Haz clic en el botón verde <strong>"Generate new token"</strong> (Generar nuevo token) y luego en <strong>"Generate new token (classic)"</strong>.</li>
+                <li>En la página "New personal access token (classic)":
+                    <ul>
+                        <li><strong>Note:</strong> Dale un nombre descriptivo a tu token, por ejemplo, "Token para ComfyUI Docker".</li>
+                        <li><strong>Expiration:</strong> Elige una fecha de caducidad. Por seguridad, es recomendable no elegir "No expiration". Puedes elegir 30, 60, 90 días o una fecha personalizada.</li>
+                        <li><strong>Select scopes:</strong> Aquí es crucial seleccionar los permisos adecuados. Para la mayoría de las operaciones de repositorio (clonar, push, pull), necesitarás al menos el permiso <code>repo</code>. Marca la casilla <strong><code>repo</code></strong> (esto marcará todas sus sub-opciones: <code>repo:status</code>, <code>repo_deployment</code>, <code>public_repo</code>, <code>repo:invite</code>, <code>security_events</code>, <code>status</code>, <code>team</code>). También es recomendable marcar <strong><code>workflow</code></strong> si planeas usar GitHub Actions.</li>
+                    </ul>
+                </li>
+                <li>Haz clic en el botón verde <strong>"Generate token"</strong> (Generar token) en la parte inferior de la página.</li>
+                <li><strong>¡MUY IMPORTANTE!</strong> GitHub te mostrará el token generado <strong>una sola vez</strong>. Cópialo inmediatamente y guárdalo en un lugar seguro (como un gestor de contraseñas). No podrás verlo de nuevo.</li>
+            </ol>
+            <p><strong>¿Cómo usar el PAT?</strong></p>
+            <p>Cuando Git te pida tu nombre de usuario y contraseña en la línea de comandos (por ejemplo, al hacer <code>git push</code>), introduce:</p>
+            <ul>
+                <li><strong>Username:</strong> Tu nombre de usuario de GitHub (ej. <code>feliodoro</code> o tu correo electrónico <code>feliodorogarcia@gmail.com</code>).</li>
+                <li><strong>Password:</strong> Pega el <strong>Personal Access Token (PAT)</strong> que acabas de generar.</li>
+            </ul>
+            <p>Git Credential Manager (GCM) puede ayudarte a almacenar el PAT para que no tengas que introducirlo cada vez. Si estás en Linux, puedes configurarlo con:</p>
+            <div class="command-block">
+                <pre><code>git config --global credential.helper store</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>La primera vez que hagas un <code>git push</code>, te pedirá el PAT y lo almacenará.</p>
+
+            <h3>Paso 3: Conectar tu Proyecto Local con GitHub</h3>
+            <p>En tu terminal, dentro del directorio <code>comfyui-docker</code>, sigue estos pasos.</p>
+            
+            <h4>A. Revisar si ya existe un "origen" remoto</h4>
+            <p>Este proyecto, al ser un clon, puede que ya tenga un origen. Verifícalo con:</p>
+            <div class="command-block">
+                <pre><code>git remote -v</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <ul>
+                <li><b>Si no aparece nada:</b> No hay remoto. Añade el tuyo con el siguiente comando.</li>
+                <li><b>Si aparece un remoto "origin" que no es el tuyo:</b> Puedes cambiarlo para que apunte a tu nuevo repositorio.</li>
+            </ul>
+
+            <h4>B. Añadir o Cambiar el Repositorio Remoto</h4>
+            <div class="info">
+                <p>Reemplaza <code>&lt;URL_DE_TU_REPOSITORIO_GIT&gt;</code> con la URL que copiaste de GitHub (ej. <code>https://github.com/feliodoro/confyuit-5090-docker.git</code>).</p>
+            </div>
+            <p>Si no tenías un remoto "origin", añádelo:</p>
+            <div class="command-block">
+                <pre><code>git remote add origin &lt;URL_DE_TU_REPOSITORIO_GIT&gt;</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>Si necesitas cambiar un remoto "origin" existente:</p>
+            <div class="command-block">
+                <pre><code>git remote set-url origin &lt;URL_DE_TU_REPOSITORIO_GIT&gt;</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h3>Paso 4: Subir tus Archivos</h3>
+            <p>Ahora, guarda y sube todos tus archivos al repositorio de GitHub.</p>
+
+            <h4>A. Revisa los cambios</h4>
+            <p>Mira qué archivos has modificado o añadido. Es una buena práctica antes de subir.</p>
+            <div class="command-block">
+                <pre><code>git status</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h4>B. Prepara y Guarda los Cambios (Commit)</h4>
+            <p>Añade todos los archivos al "área de preparación" y luego haz un "commit" para guardarlos en el historial de Git local.</p>
+            <div class="command-block">
+                <pre><code># 1. Añade todos los archivos (el .gitignore se encargará de excluir lo innecesario)
+git add .
+
+# 2. Guarda los cambios con un mensaje descriptivo
+git commit -m "Versión inicial de mi configuración de ComfyUI"</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h4>C. Sube los Cambios a GitHub</h4>
+            <p>Finalmente, empuja tus cambios a GitHub. La opción <code>-u</code> establece una relación de seguimiento para que en el futuro solo necesites usar <code>git push</code>.</p>
+            <div class="warning">
+                <p>El nombre de la rama principal puede ser <code>main</code> o <code>master</code>. Usa el que corresponda en tu caso. Puedes ver el nombre de tu rama con <code>git branch</code>.</p>
+            </div>
+            <div class="command-block">
+                <pre><code>git push -u origin main</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>¡Listo! Tu proyecto y su configuración ahora están respaldados en GitHub.</p>
+        </div>
+
+        <button type="button" class="collapsible">Gestión de Paquetes Dentro del Contenedor Docker</button>
+        <div class="content">
+            <p>El entorno ComfyUI se ejecuta dentro de un contenedor Docker, lo que significa que las dependencias y paquetes se gestionan dentro de la imagen Docker. Cualquier cambio en los paquetes debe reflejarse en el <code>Dockerfile</code> y requerirá una reconstrucción de la imagen.</p>
+
+            <h3>A. Actualizar Paquetes Existentes</h3>
+            <p>Si un paquete Python (o cualquier otra dependencia del sistema operativo) ya está instalado en tu imagen Docker y quieres actualizarlo a una versión más reciente, debes modificar el <code>Dockerfile</code>.</p>
+            <ol>
+                <li><strong>Identifica el paquete:</strong> Por ejemplo, si quieres actualizar <code>some-python-package</code>.</li>
+                <li><strong>Edita el <code>Dockerfile</code>:</strong> Busca la línea donde se instala el paquete. Si no está explícitamente, puede que esté en un <code>requirements.txt</code>.
+                    <ul>
+                        <li>Si está en un <code>requirements.txt</code> (por ejemplo, <code>requirements_comfy.txt</code>), edita ese archivo para especificar la nueva versión o simplemente elimina la versión para que <code>pip</code> instale la última.</li>
+                        <li>Si se instala directamente con <code>pip install</code> en el <code>Dockerfile</code>, añade o modifica la línea para usar <code>--upgrade</code>.</li>
+                    </ul>
+                </li>
+            </ol>
+            <p><strong>Ejemplo en <code>Dockerfile</code> para actualizar un paquete Python:</strong></p>
+            <div class="command-block">
+                <pre><code># Antes (instalación normal)
+RUN pip install some-python-package
+
+# Después (actualización)
+RUN pip install --no-cache-dir --upgrade some-python-package</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p><strong>Ejemplo en <code>Dockerfile</code> para actualizar un paquete del sistema (Ubuntu):</strong></p>
+            <div class="command-block">
+                <pre><code># Antes
+RUN apt-get update && apt-get install -y some-system-package
+
+# Después (actualiza todos los paquetes instalados)
+RUN apt-get update && apt-get upgrade -y</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>Después de modificar el <code>Dockerfile</code>, debes reconstruir la imagen:</p>
+            <div class="command-block">
+                <pre><code>docker compose down && docker build -t comfyui-station:final . && docker compose up -d</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+
+            <h3>B. Incluir Nuevos Paquetes</h3>
+            <p>Para añadir un paquete completamente nuevo al entorno Docker, también debes modificar el <code>Dockerfile</code>.</p>
+            <ol>
+                <li><strong>Identifica el paquete:</strong> Por ejemplo, si quieres añadir <code>new-python-library</code>.</li>
+                <li><strong>Edita el <code>Dockerfile</code>:</strong> Añade una nueva línea <code>RUN</code> para instalar el paquete. Es buena práctica agrupar instalaciones de <code>pip</code> o <code>apt</code>.</li>
+            </ol>
+            <p><strong>Ejemplo en <code>Dockerfile</code> para añadir un nuevo paquete Python:</strong></p>
+            <div class="command-block">
+                <pre><code># Añade esta línea en una sección apropiada de instalación de Python
+RUN pip install --no-cache-dir new-python-library</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p><strong>Ejemplo en <code>Dockerfile</code> para añadir un nuevo paquete del sistema (Ubuntu):</strong></p>
+            <div class="command-block">
+                <pre><code># Añade esta línea en una sección apropiada de instalación de paquetes del sistema
+RUN apt-get update && apt-get install -y another-system-package</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+            <p>Después de modificar el <code>Dockerfile</code>, debes reconstruir la imagen:</p>
+            <div class="command-block">
+                <pre><code>docker compose down && docker build -t comfyui-station:final . && docker compose up -d</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+        </div>
+
+        <button type="button" class="collapsible">Añadir un Nuevo Nodo (Modificación Futura)</button>
+        <div class="content">
+            <p>El proceso para añadir un nuevo componente (nodo personalizado) ahora es más sencillo y limpio, aprovechando los submódulos de Git.</p>
+            <ol>
+                <li><strong>Añadir como Submódulo:</strong> Usa <code>git submodule add</code> para registrar el nuevo componente.</li>
+                <div class="command-block">
+                    <pre><code>git submodule add &lt;URL_DEL_NUEVO_REPOSITORIO&gt; ComfyUI/custom_nodes/&lt;nombre_del_nodo&gt;</code></pre>
+                    <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+                </div>
+                <li><strong>Actualizar Dockerfile (si es necesario):</strong> Si el nuevo nodo tiene dependencias Python específicas (un <code>requirements.txt</code> propio), deberás añadir una línea en el <code>Dockerfile</code> para instalarlas. Busca la sección donde se instalan los requisitos de los nodos personalizados.</li>
+                <p><strong>Ejemplo en <code>Dockerfile</code> para instalar requisitos de un nuevo nodo:</strong></p>
+                <div class="command-block">
+                    <pre><code># ... otras instalaciones de nodos
+COPY --chown=user:user ComfyUI/custom_nodes/&lt;nombre_del_nodo&gt;/requirements.txt /tmp/&lt;nombre_del_nodo&gt;_requirements.txt
+RUN pip install --no-cache-dir -r /tmp/&lt;nombre_del_nodo&gt;_requirements.txt && rm /tmp/&lt;nombre_del_nodo&gt;_requirements.txt
+# ...</code></pre>
+                    <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+                </div>
+                <li><strong>Reconstruir la Imagen:</strong> Después de añadir el submódulo y modificar el Dockerfile (si fue necesario), reconstruye la imagen Docker.</li>
+                <div class="command-block">
+                    <pre><code>docker compose down && docker build -t comfyui-station:final . && docker compose up -d</code></pre>
+                    <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+                </div>
+                 <li><strong>Guardar Cambios:</strong> Haz un commit para guardar la nueva configuración de submódulos y los cambios en el Dockerfile.</li>
+                <div class="command-block">
+                    <pre><code>git add .gitmodules ComfyUI/custom_nodes/&lt;nombre_del_nodo&gt; Dockerfile
+git commit -m "Añadido nuevo nodo: [nombre del nodo]"</code></pre>
+                    <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+                </div>
+            </ol>
+        </div>
+        
+        <button type="button" class="collapsible">1. Resumen del Sistema</button>
+        <div class="content">
+             <table>
+                <tr><th>Componente</th><th>Detalle</th></tr>
+                <tr><td>Sistema Operativo</td><td>Linux (Probado en Ubuntu 24.04)</td></tr>
+                <tr><td>Driver NVIDIA</td><td>Versión <code>580.76.05</code> o superior.</td></tr>
+                <tr><td>Docker & Docker Compose</td><td>Necesarios para construir y ejecutar el entorno.</td></tr>
+                <tr><td>Git</td><td>Necesario para la gestión de submódulos.</td></tr>
+            </table>
+
+            <h3>1.2. Componentes Dentro del Contenedor</h3>
+            <table>
+                <tr><th>Componente</th><th>Versión / Detalle</th></tr>
+                <tr><td>Nombre de la Imagen</td><td><code>comfyui-station:final</code></td></tr>
+                <tr><td>Sistema Operativo Base</td><td>Ubuntu 22.04</td></tr>
+                <tr><td>CUDA Toolkit</td><td><code>12.9</code></td></tr>
+                <tr><td>PyTorch</td><td>Versión <i>Nightly</i> compatible con CUDA 12.9</td></tr>
+            </table>
+        </div>
+
+        <button type="button" class="collapsible">2. Proceso de Construcción (La Historia)</button>
+        <div class="content">
+            <p>La estrategia inicial de usar `git clone` manuales o dentro del Dockerfile era frágil. Se ha migrado a un sistema de <strong>Submódulos de Git</strong>, que es la solución estándar y robusta para gestionar dependencias de múltiples repositorios.</p>
+        </div>
+
+        <button type="button" class="collapsible">3. Gestión con Docker Compose</button>
+        <div class="content">
+            <p>El fichero <code>docker-compose.yml</code> sigue siendo la forma recomendada de interactuar con el contenedor.</p>
+            <h3>3.1. Contenido de <code>docker-compose.yml</code></h3>
+            <div class="command-block">
+                <pre><code># Fichero de configuración de Docker Compose para ComfyUI
+services:
+  comfyui:
+    build: .
+    image: comfyui-station:final
+    container_name: comfyui-container
+    ports:
+      - "8188:8188"
+    volumes:
+      - /home/sicario/comfyui_data/models:/opt/ComfyUI/models
+      - /home/sicario/comfyui_data/output:/opt/ComfyUI/output
+      - /home/sicario/comfyui_data/input:/opt/ComfyUI/input
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+</code></pre>
+                <button class="copy-button" onclick="copyCommand(this)">Copiar</button>
+            </div>
+        </div>
+
+        <button type="button" class="collapsible">4. Comandos Útiles de Gestión y Diagnóstico</button>
+        <div class="content">
+            <h3>4.1. Gestión del Entorno (Docker Compose)</h3>
+            <table>
+                <tr><th>Comando</th><th>Descripción</th></tr>
+                <tr><td><div class="command-block"><pre><code>docker compose up -d</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Inicia el entorno ComfyUI en segundo plano.</td></tr>
+                <tr><td><div class="command-block"><pre><code>docker compose down</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Detiene y elimina el contenedor de ComfyUI.</td></tr>
+                <tr><td><div class="command-block"><pre><code>docker compose logs -f</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Muestra los registros (logs) del contenedor en tiempo real.</td></tr>
+            </table>
+            <h3>4.2. Monitorización y Diagnóstico</h3>
+            <table>
+                <tr><th>Comando</th><th>Descripción</th></tr>
+                <tr><td><div class="command-block"><pre><code>nvidia-smi</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Muestra el uso de la GPU.</td></tr>
+                <tr><td><div class="command-block"><pre><code>docker stats</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Muestra el uso de CPU y RAM de los contenedores.</td></tr>
+                <tr><td><div class="command-block"><pre><code>docker ps -a</code></pre><button class="copy-button" onclick="copyCommand(this)">Copiar</button></div></td><td>Lista todos los contenedores en el sistema.</td></tr>
+            </table>
+        </div>
+
+        <button type="button" class="collapsible">5. Repositorios de Componentes (Submódulos)</button>
+        <div class="content">
+            <p>La lista de componentes se gestiona ahora en el fichero <code>.gitmodules</code>.</p>
+            <ul>
+                <li><strong>Base:</strong> <a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">comfyanonymous/ComfyUI</a></li>
+                <li><strong>Edición de Imagen:</strong> <a href="https://github.com/AIFSH/QwenImage-ComfyUI" target="_blank">AIFSH/QwenImage-ComfyUI</a></li>
+                <li><strong>Generación de Vídeo:</strong> <a href="https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved" target="_blank">Kosinkadink/ComfyUI-AnimateDiff-Evolved</a></li>
+                <li><strong>Gestor:</strong> <a href="https://github.com/ltdrdata/ComfyUI-Manager" target="_blank">ltdrdata/ComfyUI-Manager</a></li>
+                <li><strong>ControlNet:</strong> <a href="https://github.com/Fannovel16/comfyui_controlnet_aux" target="_blank">Fannovel16/comfyui_controlnet_aux</a></li>
+                <li><strong>IPAdapter:</strong> <a href="https://github.com/cubiq/ComfyUI_IPAdapter_plus" target="_blank">cubiq/ComfyUI_IPAdapter_plus</a></li>
+                <li><strong>Upscaling:</strong> <a href="https://github.com/ssitu/ComfyUI_UltimateSDUpscale" target="_blank">ssitu/ComfyUI_UltimateSDUpscale</a></li>
+                <li><strong>Utilidades:</strong> <a href="https://github.com/WASasquatch/was-node-suite-comfyui" target="_blank">WASasquatch/was-node-suite-comfyui</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        function copyCommand(button) {
+            const pre = button.closest('.command-block').querySelector('pre');
+            const code = pre.querySelector('code');
+            const command = code.innerText;
+            navigator.clipboard.writeText(command).then(() => {
+                button.innerText = '¡Copiado!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerText = 'Copiar';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar el comando: ', err);
+                button.innerText = 'Error';
+            });
+        }
+
+        var coll = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } 
+            });
+        }
+    </script>
+</body>
+</html>

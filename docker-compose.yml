@@ -1,0 +1,29 @@
+# Fichero de configuración de Docker Compose para ComfyUI
+# Versión del fichero: 1.0
+
+version: '3.8'
+
+services:
+  comfyui:
+    # Construye la imagen a partir del Dockerfile en el directorio actual
+    build: .
+    # Nombre de la imagen que se usará o creará
+    image: comfyui-station:final
+    # Nombre que le daremos al contenedor en ejecución
+    container_name: comfyui-container
+    # Mapeo de puertos: [Puerto en el Host]:[Puerto en el Contenedor]
+    ports:
+      - "8188:8188"
+    # Mapeo de volúmenes para persistencia de datos
+    volumes:
+      - /home/sicario/comfyui_data/models:/opt/ComfyUI/models
+      - /home/sicario/comfyui_data/output:/opt/ComfyUI/output
+      - /home/sicario/comfyui_data/input:/opt/ComfyUI/input
+    # Configuración para el acceso a la GPU de NVIDIA
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
